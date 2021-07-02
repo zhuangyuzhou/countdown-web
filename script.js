@@ -7,7 +7,7 @@ var clockElement = document.getElementById("clock");
 var memoryElement = document.getElementById("memory");
 var progressElement = document.getElementById("progress");
 
-function getMemory(days) {
+function getMemory(days, left) {
   var memory = 100;
   var rate = 0.8;
   var part = 20;
@@ -15,6 +15,8 @@ function getMemory(days) {
     memory = memory - part;
     part = part * rate;
   }
+  memory = memory - left / (24 * 3600) * part;
+  memory = memory.toFixed(2);
   return memory;
 }
 
@@ -23,11 +25,11 @@ function showTime() {
   var diff = Math.round(((new Date()).getTime() - start_time) / 1000);
   var days = Math.floor(diff / (24 * 60 * 60));
   diff = diff - days * 24 * 60 * 60;
+  var memory = getMemory(days, diff);
   var hours = Math.floor(diff / 3600);
   diff = diff - hours * 3600;
   var mins = Math.floor(diff / 60);
   var secs = diff - mins * 60;
-  var memory = getMemory(days);
   clockElement.innerHTML = days + "天" + hours + "时" + mins + "分" + secs + "秒";
   memoryElement.innerHTML = memory + "%"
   progressElement.value = memory;
